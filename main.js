@@ -31,6 +31,9 @@ async function organize(folder) {
         for(const file of files){
             if (!file.isDirectory()){
                 switch (path.extname(file.name)) {
+                    case ".gif":
+                    case ".webp":
+                    case ".jpeg":
                     case ".png":
                     case ".jpg":
                         move(folder, 'Images', file);
@@ -47,6 +50,15 @@ async function organize(folder) {
                     case ".xlsx":
                     case ".pdf":
                         move(folder, 'Documents', file);
+                        break;
+
+                    case ".mp4":
+                    case ".hevc":
+                        move(folder, 'Videos', file);
+                        break
+
+                    case ".exe":
+                        move(folder, 'Applications', file);
                         break;
                 
                     default:
