@@ -6,51 +6,62 @@ async function move(folder, newFolder, file) {
     await fs.rename(path.join(folder, file.name), path.join(folder, newFolder, file.name));
 }
 
-async function organize(folder) {
+async function organize(folder, isDryRun) {
 
     try {
         const files = await fs.readdir(folder, { withFileTypes: true });
-
         for (const file of files) {
             if (!file.isDirectory()) {
-                switch (path.extname(file.name)) {
+                let newFolder;
+                switch (path.extname(file.name).toLowerCase()) {
                     case ".gif":
                     case ".webp":
                     case ".jpeg":
                     case ".png":
                     case ".jpg":
-                        await move(folder, 'Images', file);
+                        newFolder = "Images";
                         break;
 
                     case ".mp3":
                     case ".m4a":
                     case ".wav":
-                        await move(folder, 'Music', file);
+                        newFolder = "Music";
                         break;
 
                     case ".docx":
                     case ".pptx":
                     case ".xlsx":
                     case ".pdf":
-                        await move(folder, 'Documents', file);
+                        newFolder = "Documents";
                         break;
 
                     case ".mp4":
                     case ".hevc":
-                        await move(folder, 'Videos', file);
-                        break
+                        newFolder = "Videos";
+                        break;
 
                     case ".exe":
-                        await move(folder, 'Applications', file);
+                        newFolder = "Applications";
                         break;
 
                     default:
-                        await move(folder, 'Other', file);
+                        newFolder = "Other";
                         break;
+                }
+                if(isDryRun){
+                    console.log(file.name, ' -> ', newFolder);
+                }
+                else{
+                    await move(folder, newFolder, file);
                 }
             }
         }
-        console.log("Done");
+        if(isDryRun){
+            console.log('Dry run complete. No files were moved.');
+        }
+        else{
+            console.log("Organization complete!");
+        }
     }
 
     catch (error) {
@@ -71,5 +82,13 @@ if (!process.argv[2]) {
     process.exit(1);
 }
 
+if (process.argv[3] && process.argv[3] !== '--dry-run') {
+    console.log("If you want to use dry run:");
+    console.log("node organize.js <folder-path> --dry-run");
+    process.exit(1);
+}
+
+const isDryRun = process.argv[3] === '--dry-run';
+
 const targetPath = path.resolve(process.argv[2]);
-organize(targetPath);
+organize(targetPath, isDryRun);
