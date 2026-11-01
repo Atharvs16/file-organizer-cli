@@ -1,4 +1,4 @@
-# File Organizer CLI 📁
+# File Organizer CLI
 
 A simple command-line file organizer built with Node.js.
 
@@ -8,12 +8,12 @@ This tool scans a folder and automatically organizes files into different folder
 
 * Organizes files into categories:
 
-  * 🖼️ Images
-  * 🎵 Music
-  * 📄 Documents
-  * 🎬 Videos
-  * 💻 Applications
-  * 📦 Other
+  * Images
+  * Music
+  * Documents
+  * Videos
+  * Applications
+  * Other
 * Supports asynchronous file operations using `fs/promises`
 * Creates category folders automatically
 * Accepts a folder path through command-line arguments
